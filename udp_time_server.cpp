@@ -16,7 +16,7 @@
 #include <chrono>
 #include <ctime>
 #include <unistd.h> // https://linux.die.net/man/2/read
-#include <string.h>
+#include<string.h>
 const int BUFF_SIZE = 64; // バッファのサイズ
 
 /*
@@ -56,26 +56,36 @@ int main(int argc, char* argv[])
     }
 
     // クライアントからのクエリを待ち受け．
-    while (true) {
+while (true) {
         // クライアントからクエリ文字列を待ち受ける．
         // UDPはコネクションを確立しないため，クライアントがクエリ文字列を送ってくるのを待機．
         cout << "waiting for a client...\n";
         addr_len = sizeof(clnt_addr);
 	while(1){
-        n = recvfrom(serv_socket, buff, BUFF_SIZE, 0, (struct sockaddr*)&clnt_addr, &addr_len);
+        n = recvfrom(serv_socket, buff, sizeof(buff), 0, (struct sockaddr*)&clnt_addr, &addr_len);
+	//cout << "recieve" << endl;
         if (n < 0) {
             cout << "failed to read a query from the socket.\n";
             return -1;
-        }
+        
+	}
+	
+	if(buff[0] == '~')break;
+	buff[n] = '\0';
+	for(int i = 0; i < sizeof(buff); i++){
+		cout << buff[i];
+	}
+	/*if(sizeof(buff) != BUFF_SIZE){
+		break;}
+	}*/
 
-       // cout << "Received a query from [" << inet_ntoa(clnt_addr.sin_addr) << ", " << htons(clnt_addr.sin_port) << "]" << endl;
-	if(n == BUFF_SIZE){
-		cout << buff << endl;
-		memset(buff, 0, sizeof(buff));
-	}
-	else if(n < BUFF_SIZE)break;
-	}
-        // 現在時刻取得
+        //cout << "Received a query from [" << inet_ntoa(clnt_addr.sin_addr) << ", " << htons(clnt_addr.sin_port) << "]" << endl;
+        memset(buff, 0, sizeof(buff));
+
+}
+	cout << endl;
+	//cout << "loop deta" << endl;
+	// 現在時刻取得
         time(&now);
         string msg = string("from shibata ") + ctime(&now); // string クラスは加算演算子で文字列を結合可能．
 
@@ -85,7 +95,8 @@ int main(int argc, char* argv[])
             cout << "Failed to write a message to the socket.\n";
             return -1;
         }
-    }
+	//cout << endl;
+}
 
     // ソケットを閉じる．
     close(serv_socket);
