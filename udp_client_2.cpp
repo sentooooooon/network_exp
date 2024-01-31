@@ -53,25 +53,22 @@ int main(int argc, char* argv[])
     }
 	
     //set random
-    //
     random_device rd;
     mt19937_64 mt(rd());
     uniform_int_distribution<char> cU(30, 80);
-    int loop;
-    //cin >> loop;
-    int power = pow(2,16);
+    
+    int power = pow(2,25);
     int count = 0;
-      string  msg;
+    string  msg;
       
-     //generate random message 
-      for(int i = 0; i < power; i++){
+     //generate random message
+    for(int i = 0; i < power; i++){
 	      char c = cU(mt);
 	      msg += c;
-      
       }
-      //cout << "made random message" << endl;
-      cout << msg << endl;
-      cout << "------------------------------------------------" << endl;
+    //cout << "made random message" << endl;
+    cout << msg << endl;
+    //cout << "------------------------------------------------" << endl;
 	int c = 0; 
 	int j = 0;
     auto start = system_clock::now();
@@ -79,18 +76,18 @@ int main(int argc, char* argv[])
      while(true){
 	     if(j == msg.size()){
 		     c++;
-		     buff[c] = '\0';
+		     buff[c] = 0;
 		     n = sendto(socketd, buff, sizeof(buff), 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 		     memset(buff, 0, sizeof(buff));
 		     //cout << "break" << endl;
 		     break;
 	     }
 	     else if(c == BUFF_SIZE - 1){
-		     buff[c] == '\0';
+		     buff[c] = 0;
 		     n = sendto(socketd, buff, sizeof(buff), 0 , (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 		     c = 0;
 		     //cout << "sent" << endl;
-		     cout << buff << endl;
+		     //cout << buff << endl;
 		     memset(buff, 0 ,sizeof(buff));
 	     }
 	     //cout << j << endl;
@@ -100,7 +97,7 @@ int main(int argc, char* argv[])
      buff[1] = 0;
      n = sendto(socketd, buff, sizeof(buff), 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 
-     //cout << "loop deta" << endl;
+    //cout << "loop deta" << endl;
 
     //if(msg == "END")break;
     //n = sendto(socketd, buff, BUFF_SIZE, 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
@@ -110,7 +107,7 @@ int main(int argc, char* argv[])
     }
     // サーバから現在時刻を文字列として受信．
     //cout << "befor recieve" << endl;
-    n = recvfrom(socketd, buff, sizeof(buff)-1, 0, NULL, NULL); // 終端文字列を入れるために，sizeof(buff)-1 として，文字列一つ分必ず余裕を持たせてデータを受信する．buff をこのまま文字列として使わない場合は全記憶を受信に使う．
+    //n = recvfrom(socketd, buff, sizeof(buff)-1, 0, NULL, NULL); // 終端文字列を入れるために，sizeof(buff)-1 として，文字列一つ分必ず余裕を持たせてデータを受信する．buff をこのまま文字列として使わない場合は全記憶を受信に使う．
     if (n < 0) {
         cout << "Failed to receive a message.\n";
         return -1;

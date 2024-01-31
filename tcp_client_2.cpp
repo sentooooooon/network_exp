@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
     random_device rd;
     mt19937_64 mt(rd());
     uniform_int_distribution<char> cU(30, 80);
-    int power = pow(2,16);
+    int power = pow(2,25);
     string msg;
     for(int i = 0; i < power; i++){
 	      char c = cU(mt);
